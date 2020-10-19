@@ -1,0 +1,59 @@
+---
+title: "planningpermissionslondon"
+output: html_document
+---
+
+#Import vacant dwellings data 
+
+```{r}
+VacantDwellings <- read.csv("vacant-dwellings-borough.csv", header=TRUE, stringsAsFactors = FALSE)
+```
+
+#Import Housing data 
+
+```{r}
+HousingWaitingList <- read.csv("households-on-local-authority-waiting-list.csv", stringsAsFactors = FALSE)
+```
+
+#Remove unwanted variables from Vacant Dwellings 
+
+```{r}
+VacantDwellings[19:98] <- list(NULL)
+```
+
+```{r}
+VacantDwellings1 <- VacantDwellings[!apply(VacantDwellings == "", 1, all),]
+```
+
+#Remove unwanted variables except 2019 data in VacantDwellings1
+
+```{r}
+VacantDwellings1[3:17] <- list(NULL)
+```
+
+
+#Remove unwanted variables in housing authority 
+
+```{r}
+HousingWaitingList[4:25] <- list(NULL)
+```
+
+```{r}
+HousingWaitingList[5:26] <- list(NULL)
+```
+
+```{r}
+HousingWaitingList1 <- HousingWaitingList[!apply(HousingWaitingList == "", 1, all),]
+```
+
+#Merge datasets 
+
+```{r}
+newcombineddata <- merge (VacantDwellings1, HousingWaitingList1)
+```
+
+#Not quite sure what I'm trying to achieve here. I will come back to it.
+
+
+
+
