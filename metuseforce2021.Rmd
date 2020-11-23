@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r}
+library(readxl)
+metuseofforce <- read_excel("MPS Use of Force - FY20-21 (3).xlsx")
+#View(MPS_Use_of_Force_FY20_21_3_)
+```
+
+```{r}
+#install.packages('dplyr')
+library (dplyr)
+tinytex::install_tinytex()
+
+newdf = select(metuseofforce, IncidentDate: PrimaryConduct, SubjectAge:MentalDisability)
+```
+
+
+#Remove duplicate rows of the dataframe using variables 
+
+```{r}
+dfnew <- newdf %>% 
+  group_by(IncidentDate, IncidentTime, `Incident Location: Street/Highway`, `Incident Location: Public Transport`, `Incident Location: Retail Premises`, `Incident Location: Open ground (e.g. park, car park, field)`, `Incident Location: Licensed Premises`, `Incident Location: Sports or Event Stadia`, `Incident Location: Hospital/A&E (non-mental-health setting)`, `Incident Location: Mental Health Setting`, `Incident Location: Police vehicle with prisoner handling cage`, `Incident Location: Police vehicle without prisoner handling cage`, `Incident Location: Dwelling`, `Incident Location: Police station (excluding custody block)`, `Incident Location: Custody Block`, `Incident Location: Ambulance`, `Incident Location: Other`, Borough, SubjectAge, SubjectEthnicity, SubjectGender, PhysicalDisability, MentalDisability) %>% 
+  mutate(num_dups = n(), 
+         dup_id = row_number()) %>% 
+  ungroup() %>% 
+  mutate(is_duplicated = dup_id > 1)
+```
+
+#Filter out duplicates to get a dataset to work with
+
+```{r}
+dffilter <- dfnew %>% filter(is_duplicated == FALSE)
+```
+
+#Count subject ethnicity 
+
+```{r}
+dffilter %>% count(SubjectEthnicity)
+```
+
+#Count Borough 
+
+```{r}
+dffilter %>% count(Borough)
+```
+
+
