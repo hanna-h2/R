@@ -1,0 +1,49 @@
+---
+title: "C19-protests"
+output: html_document
+---
+```{r}
+rm(list=ls())
+```
+
+```{r}
+library (ggplot2)
+library(dplyr)
+require(maps)
+require(viridis)
+theme_set(
+  theme_void()
+)
+```
+
+```{r}
+map1 <- map_data("world")
+ggplot(map1, aes(x =long, y =lat, group=group)) +
+  geom_polygon(fill="lightgray",
+               colour="white")
+```
+
+```{r}
+covidProtests <- read.csv("protests-related-to-covid.csv", header = TRUE)
+```
+
+```{r}
+covidProtests <- covidProtests %>%
+  select(Country, Count) %>%
+  rename(region = Country)
+```
+
+```{r}
+map1 <- map_data("world")
+covidProtests.map <- left_join(covidProtests, map1, by= "region")
+```
+
+
+```{r}
+ggplot(covidProtests.map, aes(map_id = region, fill = Count))+
+  geom_map(map = covidProtests.map, colour = "white")+
+  expand_limits(x = covidProtests.map$long, y=covidProtests.map$lat)+
+  scale_fill_viridis_c("Count")
+```
+
+
